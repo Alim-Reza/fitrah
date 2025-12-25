@@ -1,6 +1,12 @@
+'use client';
+
 import { Home, Video, Plus, PlaySquare, User } from 'lucide-react';
+import Link from 'next/link';
+import { useAuth } from '@/components/providers/AuthProvider';
 
 export default function BottomNav() {
+  const { user, loading } = useAuth();
+
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[#0f0f0f] border-t border-gray-800">
       <div className="flex items-center justify-around px-2 py-3">
@@ -21,10 +27,13 @@ export default function BottomNav() {
           <PlaySquare size={22} strokeWidth={2} />
           <span className="text-[10px]">Subscriptions</span>
         </button>
-        <button className="flex flex-col items-center justify-center gap-1 text-white hover:text-gray-300 transition min-w-[60px]">
+        <Link
+          href={loading ? '#' : user ? '/profile' : '/login'}
+          className="flex flex-col items-center justify-center gap-1 text-white hover:text-gray-300 transition min-w-[60px]"
+        >
           <User size={22} strokeWidth={2} />
           <span className="text-[10px]">You</span>
-        </button>
+        </Link>
       </div>
     </nav>
   );
