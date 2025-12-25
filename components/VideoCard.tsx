@@ -13,7 +13,7 @@ export default function VideoCard({ id }: VideoCardProps) {
 
   return (
     <div className="w-full mb-4">
-      <Link href={`/watch?v=${id}`} className="block">
+      <Link href={`/video/${id}`} className="block">
         {/* Thumbnail with overlay */}
         <div className="relative w-full aspect-video bg-gray-900 rounded-lg overflow-hidden hover:rounded-none transition-all">
           <Image

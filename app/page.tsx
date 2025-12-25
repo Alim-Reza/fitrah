@@ -13,7 +13,7 @@ import { getUserVideoList, VideoItem } from '@/lib/firebase/firestore';
 const defaultVideoList = [
   {
     type: "video",
-    id: "FknTw9bJsXM",
+    id: "1MGjcMVEHuU",
   },
   {
     type: "shorts",
@@ -25,11 +25,7 @@ const defaultVideoList = [
   },
   {
     type: "video",
-    id: "FknTw9bJsXM",
-  },
-  {
-    type: "video",
-    id: "FknTw9bJsXM",
+    id: "qGk6on_CDkg",
   },
   {
     type: "shorts",
@@ -38,10 +34,6 @@ const defaultVideoList = [
   {
     type: "shorts",
     id: "3Kn7bkpA1-c",
-  },
-  {
-    type: "video",
-    id: "FknTw9bJsXM",
   },
 ];
 

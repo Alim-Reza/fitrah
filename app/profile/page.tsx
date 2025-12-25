@@ -2,7 +2,7 @@ import { cookies } from 'next/headers';
 import { adminAuth } from '@/lib/firebase/admin';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { signOut } from '@/lib/firebase/auth';
+import SignOutButton from '@/components/SignOutButton';
 
 export default async function ProfilePage() {
   const cookieStore = await cookies();
@@ -54,14 +54,7 @@ export default async function ProfilePage() {
             Back to Home
           </Link>
           
-          <form action="/api/auth/signout" method="POST">
-            <button
-              type="submit"
-              className="w-full py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition"
-            >
-              Sign Out
-            </button>
-          </form>
+          <SignOutButton />
         </div>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { Cast, Bell, Search } from 'lucide-react';
+import Link from 'next/link';
 
 const categories = ['All', 'Podcasts', 'Music', 'Satire', 'Live', 'Gaming', 'News'];
 
@@ -8,7 +9,7 @@ export default function Header() {
       {/* Top bar */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800">
         {/* Logo */}
-        <div className="flex items-center">
+        <Link href="/" className="flex items-center hover:opacity-80 transition">
           <svg xmlns="http://www.w3.org/2000/svg" width="93" height="20" viewBox="0 0 93 20" focusable="false" aria-hidden="true" className="h-5 w-auto">
             <g>
               <path d="M14.4848 20C14.4848 20 23.5695 20 25.8229 19.4C27.0917 19.06 28.0459 18.08 28.3808 16.87C29 14.65 29 9.98 29 9.98C29 9.98 29 5.34 28.3808 3.14C28.0459 1.9 27.0917 0.94 25.8229 0.61C23.5695 0 14.4848 0 14.4848 0C14.4848 0 5.42037 0 3.17711 0.61C1.9286 0.94 0.954148 1.9 0.59888 3.14C0 5.34 0 9.98 0 9.98C0 9.98 0 14.65 0.59888 16.87C0.954148 18.08 1.9286 19.06 3.17711 19.4C5.42037 20 14.4848 20 14.4848 20Z" fill="#FF0033"></path>
@@ -24,7 +25,7 @@ export default function Header() {
               <path d="M92.6517 11.4999C92.6517 8.51994 92.3517 6.30994 88.9217 6.30994C85.6917 6.30994 84.9717 8.45994 84.9717 11.6199V13.7899C84.9717 16.8699 85.6317 19.1099 88.8417 19.1099C91.3817 19.1099 92.6917 17.8399 92.5417 15.3799L90.2917 15.2599C90.2617 16.7799 89.9117 17.3999 88.9017 17.3999C87.6317 17.3999 87.5717 16.1899 87.5717 14.3899V13.5499H92.6517V11.4999ZM88.8617 7.96994C90.0817 7.96994 90.1717 9.11994 90.1717 11.0699V12.0799H87.5717V11.0699C87.5717 9.13994 87.6517 7.96994 88.8617 7.96994Z" fill="white"></path>
             </g>
           </svg>
-        </div>
+        </Link>
 
         {/* Right Icons */}
         <div className="flex items-center gap-4">

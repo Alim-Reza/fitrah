@@ -18,11 +18,14 @@ export default function BottomNav() {
           <Video size={22} strokeWidth={2} />
           <span className="text-[10px]">Shorts</span>
         </button>
-        <button className="flex flex-col items-center justify-center text-white hover:text-gray-300 transition min-w-[60px]">
+        <Link
+          href={loading ? '#' : user ? '/add-video' : '/login'}
+          className="flex flex-col items-center justify-center text-white hover:text-gray-300 transition min-w-[60px]"
+        >
           <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center mb-1">
             <Plus size={20} className="text-black" strokeWidth={2.5} />
           </div>
-        </button>
+        </Link>
         <button className="flex flex-col items-center justify-center gap-1 text-white hover:text-gray-300 transition min-w-[60px]">
           <PlaySquare size={22} strokeWidth={2} />
           <span className="text-[10px]">Subscriptions</span>
