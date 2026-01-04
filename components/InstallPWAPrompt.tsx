@@ -105,9 +105,9 @@ export default function InstallPWAPrompt() {
                 Get quick access to your favorite videos! Install our app for a better experience:
               </p>
               <ul className="text-gray-400 text-xs mt-3 space-y-1">
-                <li>✓ Works offline</li>
+                <li>✓ Native app experience</li>
                 <li>✓ Faster loading</li>
-                <li>✓ Home screen access</li>
+                <li>✓ Easy home screen access</li>
               </ul>
             </div>
 

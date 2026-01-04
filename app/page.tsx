@@ -11,30 +11,16 @@ import { getUserVideoList, VideoItem } from '@/lib/firebase/firestore';
 
 // Default video list for non-authenticated users
 const defaultVideoList = [
-  {
-    type: "video",
-    id: "1MGjcMVEHuU",
-  },
-  {
-    type: "shorts",
-    id: "5JN7SZ6NETQ",
-  },
-  {
-    type: "shorts",
-    id: "3Kn7bkpA1-c",
-  },
-  {
-    type: "video",
-    id: "qGk6on_CDkg",
-  },
-  {
-    type: "shorts",
-    id: "5JN7SZ6NETQ",
-  },
-  {
-    type: "shorts",
-    id: "3Kn7bkpA1-c",
-  },
+  { type: "video", id: "m_tjxz4yS_U" },
+  { type: "video", id: "1MGjcMVEHuU" },
+  { type: "shorts", id: "xqupg9XVQKM" },
+  { type: "shorts", id: "Po098TRdOn4" },
+  { type: "video", id: "fdGWRq1dVBA" },
+  { type: "video", id: "zvY-EPgYB4Y" },
+  { type: "shorts", id: "kt4lFNVV8l8" },
+  { type: "shorts", id: "0uYqRviBnjY" },
+  { type: "video", id: "FSwy85bAJE0" },
+  { type: "shorts", id: "tUobhHz4ziE" },
 ];
 
 export default function Home() {
