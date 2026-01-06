@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ReactElement } from 'react';
 import Header from '@/components/Header';
 import BottomNav from '@/components/BottomNav';
 import VideoCard from '@/components/VideoCard';
@@ -75,7 +75,7 @@ export default function Home() {
           <div className="space-y-4">
             {/* Group consecutive shorts together */}
             {(() => {
-              const groupedItems: JSX.Element[] = [];
+              const groupedItems: ReactElement[] = [];
               let i = 0;
               
               while (i < videoList.length) {
