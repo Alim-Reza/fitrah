@@ -48,6 +48,13 @@ export default async function ProfilePage() {
 
         <div className="space-y-3">
           <Link
+            href="/settings"
+            className="block w-full py-3 bg-emerald-600 text-white text-center font-medium rounded-lg hover:bg-emerald-700 transition"
+          >
+            Prayer Time Settings
+          </Link>
+          
+          <Link
             href="/"
             className="block w-full py-3 bg-white text-black text-center font-medium rounded-lg hover:bg-gray-200 transition"
           >

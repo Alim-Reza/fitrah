@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import { ArrowLeft, ThumbsUp, ThumbsDown, Share2, MoreVertical } from 'lucide-react';
 import { useAuth } from '@/components/providers/AuthProvider';
 import { getUserVideoList, VideoItem } from '@/lib/firebase/firestore';
+import { useWatchTracking } from '@/hooks/useWatchTracking';
 
 // Default video list for non-authenticated users
 const defaultVideoList = [
@@ -40,6 +41,10 @@ export default function ShortsPlayerPage() {
 
   // Create circular list by tripling the shorts array
   const [circularList, setCircularList] = useState<ShortVideo[]>([]);
+  
+  // Track watch time for currently visible short
+  const currentVideoId = circularList[currentIndex]?.id || initialVideoId;
+  useWatchTracking({ videoId: currentVideoId, type: 'shorts' });
 
   // Fetch user's shorts list
   useEffect(() => {

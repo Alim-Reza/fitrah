@@ -3,11 +3,15 @@
 import { useParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import { ArrowLeft, ThumbsUp, ThumbsDown, Share2, MoreVertical, Eye } from 'lucide-react';
+import { useWatchTracking } from '@/hooks/useWatchTracking';
 
 export default function VideoPlayerPage() {
   const params = useParams();
   const router = useRouter();
   const videoId = params.id as string;
+  
+  // Track watch time
+  useWatchTracking({ videoId, type: 'video' });
 
   return (
     <div className="min-h-screen bg-[#0f0f0f]">

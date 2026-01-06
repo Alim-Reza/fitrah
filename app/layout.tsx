@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import InstallPWAPrompt from "@/components/InstallPWAPrompt";
+import AdhanOverlay from "@/components/AdhanOverlay";
+import ScreenTimeLockOverlay from "@/components/ScreenTimeLockOverlay";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,6 +49,8 @@ export default function RootLayout({
         <AuthProvider>
           {children}
           <InstallPWAPrompt />
+          <AdhanOverlay />
+          <ScreenTimeLockOverlay />
         </AuthProvider>
       </body>
     </html>
