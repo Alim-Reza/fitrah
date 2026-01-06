@@ -15,6 +15,9 @@ export interface ScreenTimeLimit {
   enabled: boolean;
   schedules: ScreenTimeSchedule[];
   lockMessage?: string;
+  requirePassword: boolean;
+  parentPassword?: string;
+  consecutiveShortsLimit: number;
   updatedAt: Date;
 }
 

@@ -1,0 +1,41 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user owns the document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Video lists - users can read/write their own lists
+    match /videoLists/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+    
+    // Watch history - users can read/write their own history
+    match /watchHistory/{userId}/sessions/{sessionId} {
+      allow read, write: if isOwner(userId);
+    }
+    
+    // Prayer time settings - users can read/write their own settings
+    match /prayerSettings/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+    
+    // Screen time limits - users can read/write their own limits
+    match /screenTimeLimits/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+    
+    // Screen time usage - users can read/write their own usage
+    match /screenTimeUsage/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+  }
+}

@@ -7,6 +7,14 @@ import { ArrowLeft, ThumbsUp, ThumbsDown, Share2, MoreVertical } from 'lucide-re
 import { useAuth } from '@/components/providers/AuthProvider';
 import { getUserVideoList, VideoItem } from '@/lib/firebase/firestore';
 import { useWatchTracking } from '@/hooks/useWatchTracking';
+import { getScreenTimeLimits } from '@/lib/firebase/screen-time';
+import {
+  getConsecutiveShortsCount,
+  incrementConsecutiveShortsCount,
+  resetConsecutiveShortsCount,
+  getLastVideoType,
+  setLastVideoType,
+} from '@/lib/firebase/shorts-tracking';
 
 // Default video list for non-authenticated users
 const defaultVideoList = [
@@ -45,6 +53,37 @@ export default function ShortsPlayerPage() {
   // Track watch time for currently visible short
   const currentVideoId = circularList[currentIndex]?.id || initialVideoId;
   useWatchTracking({ videoId: currentVideoId, type: 'shorts' });
+  
+  // Check consecutive shorts limit
+  useEffect(() => {
+    if (!user || loading) return;
+    
+    async function checkShortsLimit() {
+      // Check if last video was NOT a short - reset counter
+      const lastType = getLastVideoType();
+      if (lastType === 'video' || lastType === null) {
+        resetConsecutiveShortsCount();
+      }
+      
+      // Mark this as shorts viewing
+      setLastVideoType('shorts');
+      
+      // Get user's consecutive shorts limit
+      const limits = await getScreenTimeLimits(user!.uid);
+      const maxShorts = limits?.consecutiveShortsLimit || 3;
+      
+      // Increment counter
+      const count = incrementConsecutiveShortsCount();
+      
+      // Check if limit reached
+      if (count >= maxShorts) {
+        resetConsecutiveShortsCount();
+        router.push('/');
+      }
+    }
+    
+    checkShortsLimit();
+  }, [currentIndex, user, loading, router]);
 
   // Fetch user's shorts list
   useEffect(() => {

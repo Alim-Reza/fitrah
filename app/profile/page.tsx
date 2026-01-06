@@ -51,7 +51,7 @@ export default async function ProfilePage() {
             href="/settings"
             className="block w-full py-3 bg-emerald-600 text-white text-center font-medium rounded-lg hover:bg-emerald-700 transition"
           >
-            Prayer Time Settings
+            Parent Settings
           </Link>
           
           <Link

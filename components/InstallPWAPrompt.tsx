@@ -11,15 +11,19 @@ interface BeforeInstallPromptEvent extends Event {
 export default function InstallPWAPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
+  const [hasShownThisSession, setHasShownThisSession] = useState(false);
 
   useEffect(() => {
-    // Check if user previously dismissed the prompt
+    // Only run once per browser session
+    if (hasShownThisSession) return;
+
+    // Check if user previously dismissed the prompt permanently
     const dismissed = localStorage.getItem('pwa-install-dismissed');
     const dismissedDate = dismissed ? parseInt(dismissed) : 0;
-    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+    const thirtyDays = 30 * 24 * 60 * 60 * 1000;
     
-    // If dismissed less than 7 days ago, don't show
-    if (dismissedDate && Date.now() - dismissedDate < sevenDays) {
+    // If dismissed less than 30 days ago, don't show
+    if (dismissedDate && Date.now() - dismissedDate < thirtyDays) {
       return;
     }
 
@@ -27,15 +31,23 @@ export default function InstallPWAPrompt() {
     if (window.matchMedia('(display-mode: standalone)').matches) {
       return;
     }
+    
+    // Check if shown in this session
+    const shownThisSession = sessionStorage.getItem('pwa-prompt-shown');
+    if (shownThisSession) {
+      return;
+    }
 
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       
-      // Show prompt after 3 seconds delay
+      // Show prompt after 5 seconds delay (only once per page load)
       setTimeout(() => {
         setShowPrompt(true);
-      }, 3000);
+        setHasShownThisSession(true);
+        sessionStorage.setItem('pwa-prompt-shown', 'true');
+      }, 5000);
     };
 
     window.addEventListener('beforeinstallprompt', handler);
@@ -43,7 +55,7 @@ export default function InstallPWAPrompt() {
     return () => {
       window.removeEventListener('beforeinstallprompt', handler);
     };
-  }, []);
+  }, [hasShownThisSession]);
 
   const handleInstall = async () => {
     if (!deferredPrompt) return;
@@ -64,7 +76,7 @@ export default function InstallPWAPrompt() {
   };
 
   const handleDismiss = () => {
-    // Save dismissal timestamp
+    // Save dismissal timestamp (won't show again for 30 days)
     localStorage.setItem('pwa-install-dismissed', Date.now().toString());
     setShowPrompt(false);
   };

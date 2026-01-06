@@ -1,9 +1,11 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 import Header from '@/components/Header';
 import { ArrowLeft, ThumbsUp, ThumbsDown, Share2, MoreVertical, Eye } from 'lucide-react';
 import { useWatchTracking } from '@/hooks/useWatchTracking';
+import { resetConsecutiveShortsCount, setLastVideoType } from '@/lib/firebase/shorts-tracking';
 
 export default function VideoPlayerPage() {
   const params = useParams();
@@ -12,6 +14,12 @@ export default function VideoPlayerPage() {
   
   // Track watch time
   useWatchTracking({ videoId, type: 'video' });
+  
+  // Reset consecutive shorts counter when viewing regular video
+  useEffect(() => {
+    resetConsecutiveShortsCount();
+    setLastVideoType('video');
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#0f0f0f]">

@@ -96,7 +96,10 @@ export default function SettingsPage() {
           dailyLimitMinutes: 60,
           enabled: false,
           schedules: [],
-          lockMessage: 'Daily screen time limit reached. Come back tomorrow!',
+          lockMessage: 'Time for a break! Come back later.',
+          requirePassword: false,
+          parentPassword: '',
+          consecutiveShortsLimit: 3,
           updatedAt: new Date(),
         });
       }
@@ -111,41 +114,26 @@ export default function SettingsPage() {
       setIsLoading(false);
     }
   }
-          method: 2, // ISNA
-          school: 0, // Shafi
-          enabled: false,
-          pauseVideos: true,
-          playAdhan: true,
-          updatedAt: new Date(),
-        });
-      }
-    } catch (error) {
-      console.error('Failed to load settings:', error);
-      showMessage('error', 'Failed to load settings');
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   async function handleGetLocation() {
     setIsLoading(true);
     try {
       const location = await getUserLocation();
 
-      if (location && settings) {
+      if (location && prayerSettings) {
         const updatedSettings = {
-          ...settings,
+          ...prayerSettings,
           latitude: location.latitude,
           longitude: location.longitude,
         };
-        setSettings(updatedSettings);
+        setPrayerSettings(updatedSettings);
 
         // Load prayer times for new location
         const times = await fetchPrayerTimes(
           location.latitude,
           location.longitude,
-          settings.method,
-          settings.school
+          prayerSettings.method,
+          prayerSettings.school
         );
         setPrayerTimes(times);
         showMessage('success', 'Location updated successfully');
@@ -161,11 +149,16 @@ export default function SettingsPage() {
   }
 
   async function handleSaveSettings() {
-    if (!settings) return;
+    if (!prayerSettings) return;
 
     setIsSaving(true);
     try {
-      await savePrayerTimeSettings(settings);
+      await savePrayerTimeSettings(prayerSettings);
+      
+      if (screenTimeSettings) {
+        await saveScreenTimeLimits(screenTimeSettings);
+      }
+      
       showMessage('success', 'Settings saved successfully');
     } catch (error) {
       console.error('Failed to save settings:', error);
@@ -180,9 +173,14 @@ export default function SettingsPage() {
     setTimeout(() => setMessage(null), 3000);
   }
 
-  function updateSetting<K extends keyof PrayerTimeSettings>(key: K, value: PrayerTimeSettings[K]) {
-    if (!settings) return;
-    setSettings({ ...settings, [key]: value });
+  function updatePrayerSetting<K extends keyof PrayerTimeSettings>(key: K, value: PrayerTimeSettings[K]) {
+    if (!prayerSettings) return;
+    setPrayerSettings({ ...prayerSettings, [key]: value });
+  }
+  
+  function updateScreenTimeSetting<K extends keyof ScreenTimeLimit>(key: K, value: ScreenTimeLimit[K]) {
+    if (!screenTimeSettings) return;
+    setScreenTimeSettings({ ...screenTimeSettings, [key]: value });
   }
 
   if (loading || isLoading) {
@@ -193,7 +191,7 @@ export default function SettingsPage() {
     );
   }
 
-  if (!settings) return null;
+  if (!prayerSettings || !screenTimeSettings) return null;
 
   return (
     <div className="min-h-screen bg-[#0f0f0f] pb-20">
@@ -204,11 +202,35 @@ export default function SettingsPage() {
         <div className="mb-6 mt-4">
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
             <SettingsIcon size={28} />
-            Prayer Time Settings
+            Parental Controls
           </h1>
           <p className="text-gray-400 text-sm mt-1">
-            Configure Adhan notifications and video pause behavior
+            Manage prayer times, screen time limits, and viewing controls
           </p>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="flex gap-2 mb-6 bg-[#272727] p-1 rounded-lg">
+          <button
+            onClick={() => setActiveTab('prayer')}
+            className={`flex-1 px-4 py-2 rounded-md font-medium transition ${
+              activeTab === 'prayer'
+                ? 'bg-emerald-600 text-white'
+                : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            Prayer Times
+          </button>
+          <button
+            onClick={() => setActiveTab('screentime')}
+            className={`flex-1 px-4 py-2 rounded-md font-medium transition ${
+              activeTab === 'screentime'
+                ? 'bg-orange-600 text-white'
+                : 'text-gray-400 hover:text-white'
+            }`}
+          >
+            Screen Time
+          </button>
         </div>
 
         {/* Message Toast */}
@@ -224,26 +246,29 @@ export default function SettingsPage() {
 
         {/* Settings Form */}
         <div className="space-y-6">
-          {/* Enable Prayer Times */}
-          <div className="bg-[#272727] rounded-lg p-6">
-            <label className="flex items-center justify-between cursor-pointer">
-              <div className="flex items-center gap-3">
-                <Bell className="text-emerald-500" size={24} />
-                <div>
-                  <h3 className="text-white font-semibold">Enable Prayer Time Notifications</h3>
-                  <p className="text-gray-400 text-sm mt-1">
-                    Pause videos and play Adhan at prayer times
-                  </p>
-                </div>
+          {/* Prayer Times Tab */}
+          {activeTab === 'prayer' && (
+            <>
+              {/* Enable Prayer Times */}
+              <div className="bg-[#272727] rounded-lg p-6">
+                <label className="flex items-center justify-between cursor-pointer">
+                  <div className="flex items-center gap-3">
+                    <Bell className="text-emerald-500" size={24} />
+                    <div>
+                      <h3 className="text-white font-semibold">Enable Prayer Time Notifications</h3>
+                      <p className="text-gray-400 text-sm mt-1">
+                        Pause videos and play Adhan at prayer times
+                      </p>
+                    </div>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={prayerSettings.enabled}
+                    onChange={(e) => updatePrayerSetting('enabled', e.target.checked)}
+                    className="w-5 h-5 rounded"
+                  />
+                </label>
               </div>
-              <input
-                type="checkbox"
-                checked={settings.enabled}
-                onChange={(e) => updateSetting('enabled', e.target.checked)}
-                className="w-5 h-5 rounded"
-              />
-            </label>
-          </div>
 
           {/* Location Settings */}
           <div className="bg-[#272727] rounded-lg p-6">
@@ -258,11 +283,11 @@ export default function SettingsPage() {
             <div className="space-y-3">
               <div className="flex items-center gap-4 text-sm">
                 <span className="text-gray-400 w-24">Latitude:</span>
-                <span className="text-white">{settings.latitude.toFixed(4)}</span>
+                <span className="text-white">{prayerSettings.latitude.toFixed(4)}</span>
               </div>
               <div className="flex items-center gap-4 text-sm">
                 <span className="text-gray-400 w-24">Longitude:</span>
-                <span className="text-white">{settings.longitude.toFixed(4)}</span>
+                <span className="text-white">{prayerSettings.longitude.toFixed(4)}</span>
               </div>
 
               <button
@@ -279,8 +304,8 @@ export default function SettingsPage() {
           <div className="bg-[#272727] rounded-lg p-6">
             <h3 className="text-white font-semibold mb-3">Calculation Method</h3>
             <select
-              value={settings.method}
-              onChange={(e) => updateSetting('method', parseInt(e.target.value))}
+              value={prayerSettings.method}
+              onChange={(e) => updatePrayerSetting('method', parseInt(e.target.value))}
               className="w-full p-3 bg-[#0f0f0f] text-white rounded-lg border border-gray-600"
             >
               <option value={2}>ISNA (Islamic Society of North America)</option>
@@ -295,8 +320,8 @@ export default function SettingsPage() {
           <div className="bg-[#272727] rounded-lg p-6">
             <h3 className="text-white font-semibold mb-3">School (Madhab)</h3>
             <select
-              value={settings.school}
-              onChange={(e) => updateSetting('school', parseInt(e.target.value))}
+              value={prayerSettings.school}
+              onChange={(e) => updatePrayerSetting('school', parseInt(e.target.value))}
               className="w-full p-3 bg-[#0f0f0f] text-white rounded-lg border border-gray-600"
             >
               <option value={0}>Shafi, Maliki, Hanbali, Ja'fari</option>
@@ -312,8 +337,8 @@ export default function SettingsPage() {
               <span className="text-gray-300">Pause videos during prayer time</span>
               <input
                 type="checkbox"
-                checked={settings.pauseVideos}
-                onChange={(e) => updateSetting('pauseVideos', e.target.checked)}
+                checked={prayerSettings.pauseVideos}
+                onChange={(e) => updatePrayerSetting('pauseVideos', e.target.checked)}
                 className="w-5 h-5 rounded"
               />
             </label>
@@ -322,8 +347,8 @@ export default function SettingsPage() {
               <span className="text-gray-300">Play Adhan sound</span>
               <input
                 type="checkbox"
-                checked={settings.playAdhan}
-                onChange={(e) => updateSetting('playAdhan', e.target.checked)}
+                checked={prayerSettings.playAdhan}
+                onChange={(e) => updatePrayerSetting('playAdhan', e.target.checked)}
                 className="w-5 h-5 rounded"
               />
             </label>
@@ -345,6 +370,115 @@ export default function SettingsPage() {
                   ))}
               </div>
             </div>
+          )}
+            </>
+          )}
+          
+          {/* Screen Time Tab */}
+          {activeTab === 'screentime' && (
+            <>
+              {/* Enable Screen Time Limits */}
+              <div className="bg-[#272727] rounded-lg p-6">
+                <label className="flex items-center justify-between cursor-pointer">
+                  <div className="flex items-center gap-3">
+                    <Clock className="text-orange-500" size={24} />
+                    <div>
+                      <h3 className="text-white font-semibold">Enable Screen Time Limits</h3>
+                      <p className="text-gray-400 text-sm mt-1">
+                        Set daily limits and viewing controls
+                      </p>
+                    </div>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={screenTimeSettings.enabled}
+                    onChange={(e) => updateScreenTimeSetting('enabled', e.target.checked)}
+                    className="w-5 h-5 rounded"
+                  />
+                </label>
+              </div>
+              
+              {/* Daily Limit */}
+              <div className="bg-[#272727] rounded-lg p-6">
+                <h3 className="text-white font-semibold mb-3">Daily Watch Time Limit</h3>
+                <p className="text-gray-400 text-sm mb-4">Maximum minutes per day</p>
+                <input
+                  type="number"
+                  min="1"
+                  max="1440"
+                  value={screenTimeSettings.dailyLimitMinutes}
+                  onChange={(e) => updateScreenTimeSetting('dailyLimitMinutes', parseInt(e.target.value))}
+                  className="w-full p-3 bg-[#0f0f0f] text-white rounded-lg border border-gray-600"
+                />
+                {todayUsage && (
+                  <p className="text-gray-400 text-sm mt-3">
+                    Today's usage: <span className="text-white font-semibold">{todayUsage.totalMinutes}</span> minutes
+                  </p>
+                )}
+              </div>
+              
+              {/* Consecutive Shorts Limit */}
+              <div className="bg-[#272727] rounded-lg p-6">
+                <h3 className="text-white font-semibold mb-3">Consecutive Shorts Limit</h3>
+                <p className="text-gray-400 text-sm mb-4">
+                  After watching this many shorts in a row, redirect to home page
+                </p>
+                <input
+                  type="number"
+                  min="1"
+                  max="20"
+                  value={screenTimeSettings.consecutiveShortsLimit}
+                  onChange={(e) => updateScreenTimeSetting('consecutiveShortsLimit', parseInt(e.target.value))}
+                  className="w-full p-3 bg-[#0f0f0f] text-white rounded-lg border border-gray-600"
+                />
+                <p className="text-gray-400 text-xs mt-2">
+                  Prevents binge-watching of shorts content
+                </p>
+              </div>
+              
+              {/* Password Protection */}
+              <div className="bg-[#272727] rounded-lg p-6">
+                <h3 className="text-white font-semibold mb-4">Break Screen Override</h3>
+                
+                <label className="flex items-center justify-between cursor-pointer mb-4">
+                  <span className="text-gray-300">Require password to continue watching</span>
+                  <input
+                    type="checkbox"
+                    checked={screenTimeSettings.requirePassword}
+                    onChange={(e) => updateScreenTimeSetting('requirePassword', e.target.checked)}
+                    className="w-5 h-5 rounded"
+                  />
+                </label>
+                
+                {screenTimeSettings.requirePassword && (
+                  <div>
+                    <label className="text-gray-300 text-sm mb-2 block">Parent Password</label>
+                    <input
+                      type="password"
+                      placeholder="Set override password"
+                      value={screenTimeSettings.parentPassword || ''}
+                      onChange={(e) => updateScreenTimeSetting('parentPassword', e.target.value)}
+                      className="w-full p-3 bg-[#0f0f0f] text-white rounded-lg border border-gray-600"
+                    />
+                    <p className="text-gray-400 text-xs mt-2">
+                      This password allows continuing to watch after the break screen appears
+                    </p>
+                  </div>
+                )}
+              </div>
+              
+              {/* Custom Lock Message */}
+              <div className="bg-[#272727] rounded-lg p-6">
+                <h3 className="text-white font-semibold mb-3">Break Screen Message</h3>
+                <textarea
+                  value={screenTimeSettings.lockMessage || ''}
+                  onChange={(e) => updateScreenTimeSetting('lockMessage', e.target.value)}
+                  placeholder="Custom message shown when limit is reached..."
+                  rows={3}
+                  className="w-full p-3 bg-[#0f0f0f] text-white rounded-lg border border-gray-600"
+                />
+              </div>
+            </>
           )}
 
           {/* Save Button */}
