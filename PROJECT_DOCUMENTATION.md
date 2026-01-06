@@ -1,8 +1,8 @@
-# Parental Choice - Project Documentation
+# Fitrah - Project Documentation
 
 ## Project Overview
 
-**Name:** Parental Choice  
+**Name:** Fitrah  
 **Type:** Progressive Web App (PWA)  
 **Framework:** Next.js 16.1.1 (App Router, Turbopack)  
 **Purpose:** YouTube video management app with curated content for parental control
@@ -284,8 +284,8 @@ export default withPWA({
 ### `manifest.json`
 ```json
 {
-  "name": "Parental Choice",
-  "short_name": "ParentalChoice",
+  "name": "Fitrah",
+  "short_name": "Fitrah",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f0f0f",  // Matches app theme

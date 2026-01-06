@@ -8,15 +8,15 @@ export interface VideoItem {
   type: 'video' | 'shorts';
   title?: string;
   thumbnail?: string;
-  addedAt: Date;
+  addedAt: Date | Timestamp;
   order: number;
 }
 
 export interface UserVideoList {
   userId: string;
   videos: VideoItem[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date | Timestamp;
+  updatedAt: Date | Timestamp;
 }
 
 export async function getUserVideoList(userId: string): Promise<VideoItem[]> {
@@ -26,7 +26,11 @@ export async function getUserVideoList(userId: string): Promise<VideoItem[]> {
 
     if (docSnap.exists()) {
       const data = docSnap.data() as UserVideoList;
-      return data.videos || [];
+      // Convert Timestamps back to Dates for client use
+      return (data.videos || []).map(video => ({
+        ...video,
+        addedAt: video.addedAt instanceof Timestamp ? video.addedAt.toDate() : video.addedAt,
+      })).sort((a, b) => a.order - b.order);
     }
     return [];
   } catch (error) {
@@ -38,11 +42,18 @@ export async function getUserVideoList(userId: string): Promise<VideoItem[]> {
 export async function createUserVideoList(userId: string, initialVideos: VideoItem[] = []): Promise<void> {
   try {
     const docRef = doc(db, 'videoLists', userId);
+    
+    // Convert Date objects to Timestamps for Firestore
+    const videosWithTimestamps = initialVideos.map(video => ({
+      ...video,
+      addedAt: video.addedAt instanceof Date ? Timestamp.fromDate(video.addedAt) : video.addedAt,
+    }));
+
     await setDoc(docRef, {
       userId,
-      videos: initialVideos,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      videos: videosWithTimestamps,
+      createdAt: Timestamp.fromDate(new Date()),
+      updatedAt: Timestamp.fromDate(new Date()),
     });
   } catch (error) {
     console.error('Error creating user video list:', error);
@@ -66,15 +77,18 @@ export async function addVideoToUserList(userId: string, video: Omit<VideoItem, 
     }
 
     const currentList = docSnap.data() as UserVideoList;
-    const nextOrder = currentList.videos.length;
+    const nextOrder = currentList.videos ? currentList.videos.length : 0;
+
+    // Use Timestamp for Firestore consistency
+    const newVideo = {
+      ...video,
+      addedAt: Timestamp.fromDate(new Date()),
+      order: nextOrder,
+    };
 
     await updateDoc(docRef, {
-      videos: arrayUnion({
-        ...video,
-        addedAt: new Date(),
-        order: nextOrder,
-      }),
-      updatedAt: new Date(),
+      videos: arrayUnion(newVideo),
+      updatedAt: Timestamp.fromDate(new Date()),
     });
   } catch (error) {
     console.error('Error adding video to user list:', error);

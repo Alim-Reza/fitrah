@@ -111,7 +111,7 @@ export default function InstallPWAPrompt() {
             {/* Content */}
             <div className="text-center mb-6">
               <h3 className="text-white text-xl font-bold mb-2">
-                Install Parental Choice
+                Install Fitrah
               </h3>
               <p className="text-gray-300 text-sm">
                 Get quick access to your favorite videos! Install our app for a better experience:

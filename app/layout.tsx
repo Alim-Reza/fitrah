@@ -22,17 +22,17 @@ export const viewport: Viewport = {
   maximumScale: 5,
   userScalable: true,
   viewportFit: "cover",
+  themeColor: "#000000",
 };
 
 export const metadata: Metadata = {
-  title: "Parental Choice",
+  title: "Fitrah",
   description: "Manage and organize your video content",
   manifest: "/manifest.json",
-  themeColor: "#000000",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Parental Choice",
+    title: "Fitrah",
   },
 };
 

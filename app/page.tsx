@@ -61,7 +61,6 @@ export default function Home() {
   }, [user, loading]);
 
   // Group items by type for section rendering
-  let currentSection = '';
   
   return (
     <div className="min-h-screen bg-[#0f0f0f]">
@@ -74,48 +73,68 @@ export default function Home() {
           </div>
         ) : (
           <div className="space-y-4">
-            {videoList.map((item, index) => {
-              const needsShortsHeader = item.type === "shorts" && currentSection !== "shorts";
-              if (item.type === "shorts") currentSection = "shorts";
-              else currentSection = "video";
+            {/* Group consecutive shorts together */}
+            {(() => {
+              const groupedItems: JSX.Element[] = [];
+              let i = 0;
               
-              if (item.type === "video") {
-                return (
-                  <div key={index}>
-                    <VideoCard id={item.id} />
-                  </div>
-                );
-              } else {
-                // For shorts, check if next item is also shorts to group them
-                const nextItem = videoList[index + 1];
-                const isNextShorts = nextItem && nextItem.type === "shorts";
+              while (i < videoList.length) {
+                const item = videoList[i];
                 
-                // Skip if this is the second short in a pair
-                if (index > 0 && videoList[index - 1].type === "shorts") {
-                  return null;
-                }
-                
-                return (
-                  <div key={index}>
-                    {needsShortsHeader && (
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                          <Video className="text-red-600" size={24} fill="currentColor" />
-                          <h2 className="text-white text-lg font-semibold">Shorts</h2>
-                        </div>
-                        <button className="text-white hover:text-gray-300">
-                          <MoreVertical size={24} />
-                        </button>
-                      </div>
-                    )}
-                    <div className="grid grid-cols-2 gap-2">
-                      <ShortsCard id={item.id} />
-                      {isNextShorts && <ShortsCard id={nextItem.id} />}
+                if (item.type === "video") {
+                  // Regular video
+                  groupedItems.push(
+                    <div key={`video-${i}`}>
+                      <VideoCard id={item.id} />
                     </div>
-                  </div>
-                );
+                  );
+                  i++;
+                } else if (item.type === "shorts") {
+                  // Collect consecutive shorts
+                  const shorts: Array<{ type: string; id: string }> = [];
+                  let shortsStartIndex = i;
+                  
+                  while (i < videoList.length && videoList[i].type === "shorts") {
+                    shorts.push(videoList[i]);
+                    i++;
+                  }
+                  
+                  // Add shorts header if we have any shorts
+                  if (shorts.length > 0) {
+                    groupedItems.push(
+                      <div key={`shorts-section-${shortsStartIndex}`}>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-2">
+                            <Video className="text-red-600" size={24} fill="currentColor" />
+                            <h2 className="text-white text-lg font-semibold">Shorts</h2>
+                          </div>
+                          <button className="text-white hover:text-gray-300">
+                            <MoreVertical size={24} />
+                          </button>
+                        </div>
+                        
+                        {/* Render shorts in pairs (2 per row) */}
+                        <div className="space-y-2">
+                          {Array.from({ length: Math.ceil(shorts.length / 2) }, (_, rowIndex) => {
+                            const startIdx = rowIndex * 2;
+                            const pair = shorts.slice(startIdx, startIdx + 2);
+                            
+                            return (
+                              <div key={`shorts-row-${rowIndex}`} className="grid grid-cols-2 gap-2">
+                                <ShortsCard id={pair[0].id} />
+                                {pair[1] && <ShortsCard id={pair[1].id} />}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  }
+                }
               }
-            })}
+              
+              return groupedItems;
+            })()}
           </div>
         )}
       </main>

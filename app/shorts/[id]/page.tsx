@@ -46,6 +46,7 @@ export default function ShortsPlayerPage() {
   const [fetchingVideos, setFetchingVideos] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const hasScrolledToInitial = useRef(false);
+  const hasCheckedInitialLimit = useRef(false);
 
   // Create circular list by tripling the shorts array
   const [circularList, setCircularList] = useState<ShortVideo[]>([]);
@@ -54,9 +55,9 @@ export default function ShortsPlayerPage() {
   const currentVideoId = circularList[currentIndex]?.id || initialVideoId;
   useWatchTracking({ videoId: currentVideoId, type: 'shorts' });
   
-  // Check consecutive shorts limit
+  // Check consecutive shorts limit - only on initial load
   useEffect(() => {
-    if (!user || loading) return;
+    if (!user || loading || hasCheckedInitialLimit.current) return;
     
     async function checkShortsLimit() {
       // Check if last video was NOT a short - reset counter
@@ -79,11 +80,14 @@ export default function ShortsPlayerPage() {
       if (count >= maxShorts) {
         resetConsecutiveShortsCount();
         router.push('/');
+        return;
       }
+      
+      hasCheckedInitialLimit.current = true;
     }
     
     checkShortsLimit();
-  }, [currentIndex, user, loading, router]);
+  }, [user, loading, router]);
 
   // Fetch user's shorts list
   useEffect(() => {
