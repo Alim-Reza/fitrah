@@ -111,16 +111,31 @@ export async function getUserLocation(): Promise<{ latitude: number; longitude: 
       return;
     }
     
+    // Set a timeout to prevent UI blocking
+    const timeoutId = setTimeout(() => {
+      console.warn('Location request timed out');
+      resolve(null);
+    }, 10000); // 10 second timeout
+    
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        clearTimeout(timeoutId);
         resolve({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         });
       },
       (error) => {
+        clearTimeout(timeoutId);
         console.error('Error getting location:', error);
+        // Don't block UI flow - just return null
         resolve(null);
+      },
+      {
+        // Geolocation options
+        enableHighAccuracy: false, // Faster, less battery
+        timeout: 8000, // 8 second timeout
+        maximumAge: 300000 // 5 minutes cache
       }
     );
   });

@@ -118,7 +118,13 @@ export default function SettingsPage() {
   async function handleGetLocation() {
     setIsLoading(true);
     try {
-      const location = await getUserLocation();
+      // Add a shorter timeout wrapper for immediate UI feedback
+      const locationPromise = getUserLocation();
+      const timeoutPromise = new Promise<null>((resolve) => 
+        setTimeout(() => resolve(null), 5000) // 5 second max wait
+      );
+      
+      const location = await Promise.race([locationPromise, timeoutPromise]);
 
       if (location && prayerSettings) {
         const updatedSettings = {
@@ -138,11 +144,11 @@ export default function SettingsPage() {
         setPrayerTimes(times);
         showMessage('success', 'Location updated successfully');
       } else {
-        showMessage('error', 'Failed to get location. Please enable location access.');
+        showMessage('error', 'Failed to get location. Please enable location access or try again.');
       }
     } catch (error) {
       console.error('Failed to get location:', error);
-      showMessage('error', 'Failed to get location');
+      showMessage('error', 'Location request failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
