@@ -21,6 +21,7 @@ export default function SignOutButton() {
 
   return (
     <button
+      data-testid="signout-button"
       onClick={handleSignOut}
       disabled={loading}
       className="w-full py-3 bg-red-500 text-white font-medium rounded-lg hover:bg-red-600 transition disabled:opacity-50 disabled:cursor-not-allowed"

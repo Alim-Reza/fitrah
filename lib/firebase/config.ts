@@ -1,8 +1,8 @@
 'use client';
 
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
-import { getAuth, Auth } from 'firebase/auth';
-import { getFirestore, Firestore, enableIndexedDbPersistence } from 'firebase/firestore';
+import { getAuth, Auth, connectAuthEmulator } from 'firebase/auth';
+import { getFirestore, Firestore, enableIndexedDbPersistence, connectFirestoreEmulator } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -23,14 +23,27 @@ if (typeof window !== 'undefined') {
   auth = getAuth(app);
   db = getFirestore(app);
   
-  // Enable offline persistence for Firestore
-  enableIndexedDbPersistence(db).catch((err) => {
-    if (err.code === 'failed-precondition') {
-      console.warn('Persistence failed: Multiple tabs open');
-    } else if (err.code === 'unimplemented') {
-      console.warn('Persistence not available in this browser');
+  // Connect to Firebase emulators if FIREBASE_EMULATOR env var is set
+  if (process.env.NEXT_PUBLIC_FIREBASE_EMULATOR === 'true') {
+    try {
+      connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+      connectFirestoreEmulator(db, '127.0.0.1', 8080);
+      console.log('Connected to Firebase emulators');
+    } catch (error) {
+      console.warn('Failed to connect to emulators:', error);
     }
-  });
+  }
+  
+  // Enable offline persistence for Firestore (not for emulators)
+  if (process.env.NEXT_PUBLIC_FIREBASE_EMULATOR !== 'true') {
+    enableIndexedDbPersistence(db).catch((err) => {
+      if (err.code === 'failed-precondition') {
+        console.warn('Persistence failed: Multiple tabs open');
+      } else if (err.code === 'unimplemented') {
+        console.warn('Persistence not available in this browser');
+      }
+    });
+  }
 }
 
 export { app, auth, db };

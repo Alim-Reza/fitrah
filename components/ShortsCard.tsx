@@ -12,7 +12,7 @@ export default function ShortsCard({ id }: ShortsCardProps) {
   const thumbnailUrl = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
 
   return (
-    <Link href={`/shorts/${id}`} className="block relative">
+    <Link href={`/shorts/${id}`} className="block relative" data-testid={`shorts-card-${id}`}>
       <div className="relative w-full aspect-[9/16] bg-gray-900 rounded-lg overflow-hidden hover:scale-[1.02] transition-transform">
         <Image
           src={thumbnailUrl}

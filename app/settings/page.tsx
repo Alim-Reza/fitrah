@@ -433,6 +433,7 @@ export default function SettingsPage() {
                   type="number"
                   min="1"
                   max="20"
+                  data-testid="consecutive-shorts-input"
                   value={screenTimeSettings.consecutiveShortsLimit}
                   onChange={(e) => updateScreenTimeSetting('consecutiveShortsLimit', parseInt(e.target.value))}
                   className="w-full p-3 bg-[#0f0f0f] text-white rounded-lg border border-gray-600"
@@ -491,6 +492,7 @@ export default function SettingsPage() {
           <button
             onClick={handleSaveSettings}
             disabled={isSaving}
+            data-testid="save-settings-button"
             className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-600 text-white rounded-lg font-semibold transition flex items-center justify-center gap-2"
           >
             <Save size={20} />

@@ -1,0 +1,99 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e6] [cursor=pointer]:
+    - button "Open Next.js Dev Tools" [ref=e7]:
+      - img [ref=e8]
+    - generic [ref=e11]:
+      - button "Open issues overlay" [ref=e12]:
+        - generic [ref=e13]:
+          - generic [ref=e14]: "0"
+          - generic [ref=e15]: "1"
+        - generic [ref=e16]: Issue
+      - button "Collapse issues badge" [ref=e17]:
+        - img [ref=e18]
+  - alert [ref=e20]
+  - generic [ref=e21]:
+    - banner [ref=e22]:
+      - generic [ref=e23]:
+        - link [ref=e24] [cursor=pointer]:
+          - /url: /
+          - img [ref=e25]
+        - generic [ref=e37]:
+          - button [ref=e38]:
+            - img [ref=e39]
+          - button [ref=e43]:
+            - img [ref=e44]
+          - button [ref=e47]:
+            - img [ref=e48]
+      - generic [ref=e52]:
+        - button "All" [ref=e53]
+        - button "Podcasts" [ref=e54]
+        - button "Music" [ref=e55]
+        - button "Satire" [ref=e56]
+        - button "Live" [ref=e57]
+        - button "Gaming" [ref=e58]
+        - button "News" [ref=e59]
+    - main [ref=e60]:
+      - generic [ref=e61]:
+        - generic [ref=e63]:
+          - link "Video thumbnail 12:34" [ref=e64] [cursor=pointer]:
+            - /url: /video/FknTw9bJsXM
+            - generic [ref=e65]:
+              - img "Video thumbnail" [ref=e66]
+              - generic [ref=e67]: 12:34
+          - generic [ref=e68]:
+            - generic [ref=e71]:
+              - heading "Video Title - Sample Content for Testing" [level=3] [ref=e72]
+              - generic [ref=e73]:
+                - generic [ref=e74]: Channel Name
+                - generic [ref=e75]:
+                  - generic [ref=e76]: 148K views
+                  - generic [ref=e77]: •
+                  - generic [ref=e78]: 6 days ago
+            - button [ref=e79]:
+              - img [ref=e80]
+        - generic [ref=e84]:
+          - generic [ref=e85]:
+            - generic [ref=e86]:
+              - img [ref=e87]
+              - heading "Shorts" [level=2] [ref=e90]
+            - button [ref=e91]:
+              - img [ref=e92]
+          - generic [ref=e97]:
+            - 'link "Shorts thumbnail He didn''t expect him to do THAT 😱 #anime" [ref=e98] [cursor=pointer]':
+              - /url: /shorts/5JN7SZ6NETQ
+              - generic [ref=e99]:
+                - img "Shorts thumbnail" [ref=e100]
+                - button [ref=e101]:
+                  - img [ref=e102]
+                - 'heading "He didn''t expect him to do THAT 😱 #anime" [level=3] [ref=e107]'
+            - 'link "Shorts thumbnail He didn''t expect him to do THAT 😱 #anime" [ref=e108] [cursor=pointer]':
+              - /url: /shorts/3Kn7bkpA1-c
+              - generic [ref=e109]:
+                - img "Shorts thumbnail" [ref=e110]
+                - button [ref=e111]:
+                  - img [ref=e112]
+                - 'heading "He didn''t expect him to do THAT 😱 #anime" [level=3] [ref=e117]'
+    - navigation [ref=e118]:
+      - generic [ref=e119]:
+        - link "Home" [ref=e120] [cursor=pointer]:
+          - /url: /
+          - img [ref=e121]
+          - generic [ref=e124]: Home
+        - link "History" [ref=e125] [cursor=pointer]:
+          - /url: /history
+          - img [ref=e126]
+          - generic [ref=e129]: History
+        - link [ref=e130] [cursor=pointer]:
+          - /url: /add-video
+          - img [ref=e132]
+        - button "Videos" [ref=e133]:
+          - img [ref=e134]
+          - generic [ref=e137]: Videos
+        - link "You" [ref=e138] [cursor=pointer]:
+          - /url: /profile
+          - img [ref=e139]
+          - generic [ref=e142]: You
+```

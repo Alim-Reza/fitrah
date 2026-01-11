@@ -12,7 +12,7 @@ export default function VideoCard({ id }: VideoCardProps) {
   const thumbnailUrl = `https://img.youtube.com/vi/${id}/maxresdefault.jpg`;
 
   return (
-    <div className="w-full mb-4">
+    <div className="w-full mb-4" data-testid={`video-card-${id}`}>
       <Link href={`/video/${id}`} className="block">
         {/* Thumbnail with overlay */}
         <div className="relative w-full aspect-video bg-gray-900 rounded-lg overflow-hidden hover:rounded-none transition-all">
