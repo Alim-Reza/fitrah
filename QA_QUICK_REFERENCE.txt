@@ -1,0 +1,155 @@
+FITRAH QA FIXES - QUICK REFERENCE
+May 1, 2026
+
+┌─────────────────────────────────────────────────────────┐
+│ 4 CRITICAL FIXES APPLIED - READY FOR TESTING            │
+└─────────────────────────────────────────────────────────┘
+
+BEFORE & AFTER COMPARISON
+═════════════════════════════════════════════════════════
+
+1️⃣  HEADER BRANDING
+   Before: YouTube logo (SVG icon)
+   After:  "Fitrah" text (bold, white)
+   Test:   Does home page header show "Fitrah"?
+
+2️⃣  SETTINGS TITLE
+   Before: "Parental Controls"
+   After:  "Fitrah - Parental Controls"
+   Test:   Does settings page title show "Fitrah"?
+
+3️⃣  CONSECUTIVE SHORTS LIMIT
+   Before: Opens settings, limit value shown but doesn't work
+   After:  Limit enforced per shorts session
+   Test:   Set limit=3, watch 3 shorts, get redirected on 4th?
+
+4️⃣  SIGN OUT BUTTON
+   Before: Redirects to /login
+   After:  Redirects to / (home)
+   Test:   After signing out, are you on home page?
+
+5️⃣  SHARE TARGET
+   Before: ❌ Fitrah not in YouTube share list (Android)
+   After:  ✅ Manifest correctly configured
+   Test:   Need to test on real Android device
+
+
+QUICK TEST SCRIPT
+═════════════════════════════════════════════════════════
+
+TEST 1: Header Branding (1 min)
+  → Open app
+  → Check header says "Fitrah" not YouTube logo
+  → Expected: ✅ PASS
+
+TEST 2: Settings Title (1 min)
+  → Go to Settings
+  → Check page title shows "Fitrah - Parental Controls"
+  → Expected: ✅ PASS
+
+TEST 3: Shorts Limit (3 min)
+  → Go to Settings → Screen Time → Set Consecutive Shorts = 3
+  → Open any Short
+  → Swipe up 3 times (watch 3 shorts)
+  → On 4th swipe, should redirect to home
+  → Expected: ✅ PASS (redirect after 3)
+
+TEST 4: Sign Out (2 min)
+  → Log in
+  → Go to Settings
+  → Click "Sign Out"
+  → Expected: Should be on HOME page, not login page ✅ PASS
+
+TEST 5: Share Target [Android Only]
+  → Install Fitrah PWA on Android
+  → Open YouTube app
+  → Find any video, tap Share
+  → Look for "Fitrah" in app list
+  → Expected: Fitrah should appear (may take 24-48h) ✅ PASS
+
+
+STATUS MATRIX
+═════════════════════════════════════════════════════════
+
+Issue              | File                        | Fixed? | Status
+─────────────────────────────────────────────────────────
+Header Logo        | components/Header.tsx       | ✅     | Deployed
+Settings Title     | app/settings/page.tsx       | ✅     | Deployed
+Shorts Limit       | app/shorts/[id]/page.tsx    | ✅     | Deployed
+SignOut Redirect   | components/SignOutButton    | ✅     | Deployed
+Share Target       | public/manifest.json        | ⚠️     | Verified
+
+
+DEPLOYMENT CHECKLIST
+═════════════════════════════════════════════════════════
+
+Before Testing:
+  [ ] npm install (fresh dependencies)
+  [ ] npm run build (rebuild app)
+  [ ] npm run dev (start dev server)
+  [ ] Clear browser cache
+  [ ] Open in incognito tab
+
+Testing Browsers:
+  [ ] Chrome/Chromium
+  [ ] Firefox
+  [ ] Safari (if available)
+  [ ] Mobile Chrome
+  [ ] Mobile Firefox
+
+Testing Devices:
+  [ ] Desktop (1920x1080)
+  [ ] Tablet (iPad/Android)
+  [ ] Mobile (360px width)
+  [ ] Android (for share target test)
+
+
+PASS/FAIL SUMMARY FORM
+═════════════════════════════════════════════════════════
+
+Test Name                  | Result | Device  | Browser
+─────────────────────────────────────────────────────────
+Header Branding            | [ ]✅  | ___     | ___
+Settings Title Branding    | [ ]✅  | ___     | ___
+Shorts Limit Enforcement   | [ ]✅  | ___     | ___
+SignOut Auto-Redirect      | [ ]✅  | ___     | ___
+Share Target (Android)     | [ ]✅  | ___     | ___
+
+Regression Tests:
+  Shorts Scroll Nav        | [ ]✅  | ___     | ___
+  Add Video Persist        | [ ]✅  | ___     | ___
+  Add Shorts Persist       | [ ]✅  | ___     | ___
+  Share Landing            | [ ]✅  | ___     | ___
+  Video Count Match        | [ ]✅  | ___     | ___
+
+
+COMMON ISSUES & SOLUTIONS
+═════════════════════════════════════════════════════════
+
+Issue: "Still seeing old YouTube logo"
+→ Solution: Hard refresh (Ctrl+Shift+R) or clear cache
+
+Issue: "Settings title still shows old text"
+→ Solution: npm run build && npm run dev (rebuild required)
+
+Issue: "Shorts limit still doesn't work"
+→ Solution: Check Settings > Screen Time > Consecutive Shorts Limit
+→ Must be > 0 and properly set
+
+Issue: "Share Target doesn't show on Android"
+→ Solution: PWA must be INSTALLED (not just web open)
+→ May take 24-48 hours for Android to index
+
+
+DOCUMENTATION LINKS
+═════════════════════════════════════════════════════════
+
+Full Details:          MANUAL_TEST_FIXES_SUMMARY.md
+Bangla Test Script:    QA_TEST_FIXES_BN.txt
+Changes Log:           FIXES_APPLIED.md
+Project Docs:          PROJECT_DOCUMENTATION.md
+
+
+═════════════════════════════════════════════════════════
+Ready to test! Questions? Check the documentation files.
+═════════════════════════════════════════════════════════

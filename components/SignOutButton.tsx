@@ -12,7 +12,7 @@ export default function SignOutButton() {
     setLoading(true);
     try {
       await signOut();
-      router.push('/login');
+      router.push('/');
     } catch (error) {
       console.error('Sign out error:', error);
       setLoading(false);

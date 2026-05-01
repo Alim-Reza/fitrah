@@ -208,7 +208,7 @@ export default function SettingsPage() {
         <div className="mb-6 mt-4">
           <h1 className="text-2xl font-bold text-white flex items-center gap-2">
             <SettingsIcon size={28} />
-            Parental Controls
+            Fitrah - Parental Controls
           </h1>
           <p className="text-gray-400 text-sm mt-1">
             Manage prayer times, screen time limits, and viewing controls
